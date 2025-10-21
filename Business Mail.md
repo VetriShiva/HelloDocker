@@ -41,6 +41,8 @@ I suggest an **open discussion** to align on next steps and define an alternate 
 As a **kind request to BR**, we recommend reviewing the **current customer-facing delay (loader)** on the **home screen**, which has increased after introducing new features such as **What’s Next**, **Best for You**, **Available Balance**, and **3D Pending Authorization**.  
 Addressing this from a **business and design perspective** will help us deliver a smoother and faster experience for our customers.  
 
+> **Note:** This BR request is for **performance optimization and user experience improvement** — it is **not related to any production bug or incident**.
+
 Your continued **support and collaboration** are much appreciated as we work together to deliver a **seamless and sustainable user experience**.  
 
 **Best regards,**  
