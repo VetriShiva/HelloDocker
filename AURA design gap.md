@@ -89,3 +89,22 @@ During analysis of the **AURA inquiry scenario**, we observed that the issue occ
 
 **Best regards,**  
 **Vetri**
+
+
+# RE: Weyay | CreditCards/1.0/CreditCardDetails API Failure Impact
+
+**From:** Vetri  
+**Purpose:** Brief, non-escalatory clarification from MAS side.
+
+---
+
+During analysis of the **AURA inquiry** scenario, we observed the issue occurs when the system switches to **offline mode** during FISERV MQ downtime.
+
+- **Offline response** does not include the balance field (`balType = "Avail"`) expected by the UI.  
+- **No instant (same-day) card records** are available in offline mode because it relies on **T-1 data**.  
+- This matches the earlier understanding that **offline query support** was planned for later implementation.
+
+*Note:* The current behavior reflects an **existing design implemented by a previous developer**. Sharing only for alignment.
+
+**Regards,**  
+Vetri
