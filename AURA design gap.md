@@ -47,3 +47,45 @@ Kindly review and advise on the next steps from ESB’s end to ensure consistent
 
 **Regards,**  
 **Vetri**
+
+
+# AURA Inquiry – Offline Mode Observation
+
+**Author:** Vetri  
+**Date:** 21-Oct-2025  
+**Purpose:** To document current system behavior for AURA inquiry when FISERV MQ is down.  
+**Note:** This design and implementation were done by a previous developer; this note is purely for clarity and team alignment.
+
+---
+
+## Summary
+
+During analysis of the **AURA inquiry scenario**, we observed that the issue occurs when the system switches to **offline mode** during FISERV MQ downtime.
+
+---
+
+## Observations
+
+- The **offline inquiry response** does not include the balance field (`balType = "Avail"`) that the UI expects for displaying card balance.  
+- In **offline mode**, there are **no instant (same-day) card records** available, since the data is based on **T-1 information** from the backend system.  
+- This behavior matches the earlier understanding that **offline query support** was planned for later implementation as per ESB communication.
+
+---
+
+## Reference Implementations
+
+- [PR 6815 – Online mode only](https://dev.azure.com.mcas.ms/nbkcloud/Weyay/_git/dvp-server/pullrequest/6815)  
+- [PR 7944 – Online-to-offline fallback enhancement](https://dev.azure.com.mcas.ms/nbkcloud/Weyay/_git/dvp-server/pullrequest/7944)
+
+---
+
+## Remarks
+
+- The above behavior reflects **existing design** implemented by a **previous developer**.  
+- This document is **not an escalation** but intended only to **keep all teams aligned** on the current design and inquiry flow.  
+- Further validation from ESB/FISERV side may help confirm if offline inquiry can be extended to return required balance data for consistency.
+
+---
+
+**Best regards,**  
+**Vetri**
