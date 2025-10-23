@@ -154,4 +154,89 @@ Scenario 6: Edge dates (February & 31st)
 When user sets scheduledDay = 31 for February
 Then
 
-Adjust `nextDue
+Adjust nextDueDate to last valid day (28 or 29).
+
+Return:
+
+{
+  "scheduledDay": 31,
+  "adjustedNextDueDate": "2025-02-28",
+  "note": "February adjusted to last valid date"
+}
+
+
+
+---
+
+Scenario 7: Future month cutoff
+
+Given request made after cutoff (e.g., after 10th of month)
+Then
+
+Apply change from next-next installment cycle.
+
+Return:
+
+{
+  "scheduledDay": 30,
+  "effectiveFrom": "2025-03-30",
+  "note": "Change requested after cutoff; effective from next cycle."
+}
+
+
+
+---
+
+Scenario 8: Downstream LOS failure
+
+Given ESB/LOS update times out
+Then
+
+Return 202 Accepted and async operation reference.
+
+{
+  "operationId": "op-98765",
+  "status": "PENDING",
+  "message": "Scheduled day update is in progress."
+}
+
+
+
+---
+
+Scenario 9: Duplicate request (Idempotency)
+
+When same request (same loanNumber, scheduledDay, and Idempotency-Key) is repeated
+Then
+
+Return same operation ID and response.
+
+No duplicate audit entry created.
+
+
+
+---
+
+Test Data
+
+Loan	Current Date	ScheduledDay	Expected NextDueDate
+
+L001	2025-02-05	20	2025-02-20
+L002	2025-02-25	25	2025-03-25
+L003	2025-02-27	31	2025-02-28
+
+
+
+---
+
+Notes
+
+Allowed range: 20–31 only.
+
+If scheduledDay=null → remove customization.
+
+February handled gracefully.
+
+All actions logged in audit table.
+
+Idempotency key mandatory for updates to prevent replay.
