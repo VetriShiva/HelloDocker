@@ -1,23 +1,20 @@
-# Urgent: AURA Card Not Visible – Duplicate Card Creation in Production
+# Subject: Urgent: AURA Card Not Visible – Duplicate Card Creation in Production
 
 **To:** Michael Sefrin, Arivazhagan Meiyazhagan  
-**Cc:** Ferhat Bulut, Ahmed Saleh Ghreban Abdlrahman, Wasim Hammouda, Naji Chemaly, IT Platform Integrations  
-**From:** Vetri (MAS Solution Architect)  
-**Date:** 26-Oct-2025  
+**Cc:** Esmail Bullo, Ahmed Selim, Wadah Hammoud, Naji Chemaly, IT Platform-Integrations  
+**From:** Vetri  
 
 ---
 
-### Context
-A **production issue** has been identified where the customer is **unable to view their AURA card**.  
-This leads to **duplicate card creation**, impacting live users. Immediate attention is required.
+Dear Michael & Arivazhagan,
 
----
+Kindly check on the below **production issue** — the customer is unable to view their **AURA card**, which is leading to **duplicate card creation**.  
+This is impacting live users and requires **immediate attention**.
 
-### API Reference
-**Endpoint:**  
+### API
 `https://apis.nbk.kuwait/gateway/CreditCards/1.0/CreditCardDetails`
 
-**Sample Request:**
+### Sample Request
 ```json
 {
   "header": {
