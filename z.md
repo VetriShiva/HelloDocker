@@ -1,24 +1,16 @@
 # Subject: RE: Urgent: AURA Card Not Visible – Duplicate Card Creation in Production
 
-**To:** Raj Kumar Panneerselvam  
-**Cc:** Michael Sefrin, Arivazhagan Meiyazhagan, Ahmed Saleh, Wadih Hannouch, Naji Chemaly, IT Platform-Integrations  
-**From:** Vetri  
+Dear Mahendra,
 
----
+Thank you for your feedback.
 
-Dear Raj,
+We’ve identified a **design gap between online and offline modes**. As per business requirements, customers must always view **live AURA balance and card details**. However, in **offline mode**, the **available balance is not returned** and only **T-1 balance data** is available.
 
-Thank you for the update.  
-Could you please advise on the **maximum threshold and scalability limit** — specifically, how the **system handles high concurrent requests and load distribution** during peak login hours?
+To meet this expectation, we continue to use **online (VMX) mode** for AURA inquiries.  
+During **peak login hours** (e.g., campaigns or new feature promotions), login volume may increase significantly. Since each login verifies the **AURA card status and balance**, we’d like to confirm the **maximum concurrent login count and API throughput ESB can safely support** under load.
 
-We are already observing around **40K+ logins today**, and the user base is rapidly increasing. It’s important to validate that our **backend and API layers can sustain the projected load** to prevent similar production issues in the future.
+Your guidance on this will help us ensure a **stable and real-time customer experience**.
 
-Please note, our team is also working on **home screen optimization** and coordinating with **business stakeholders** to enhance **user experience** and reduce **unnecessary backend calls**.
-
-Appreciate your prompt analysis and confirmation.
-
----
-
-**Best regards,**  
+Best regards,  
 **Vetri**  
 _MAS Solution Architect_
