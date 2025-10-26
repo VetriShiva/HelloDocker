@@ -1,31 +1,24 @@
-# Subject: Urgent: AURA Card Not Visible – Duplicate Card Creation in Production
+# Subject: RE: Urgent: AURA Card Not Visible – Duplicate Card Creation in Production
 
-**To:** Michael Sefrin, Arivazhagan Meiyazhagan  
-**Cc:** Esmail Bullo, Ahmed Selim, Wadah Hammoud, Naji Chemaly, IT Platform-Integrations  
+**To:** Raj Kumar Panneerselvam  
+**Cc:** Michael Sefrin, Arivazhagan Meiyazhagan, Ahmed Saleh, Wadih Hannouch, Naji Chemaly, IT Platform-Integrations  
 **From:** Vetri  
 
 ---
 
-Dear Michael & Arivazhagan,
+Dear Raj,
 
-Kindly check on the below **production issue** — the customer is unable to view their **AURA card**, which is leading to **duplicate card creation**.  
-This is impacting live users and requires **immediate attention**.
+Thank you for the update.  
+Could you please advise on the **maximum threshold and scalability limit** — specifically, how the **system handles high concurrent requests and load distribution** during peak login hours?
 
-### API
-`https://apis.nbk.kuwait/gateway/CreditCards/1.0/CreditCardDetails`
+We are already observing around **40K+ logins today**, and the user base is rapidly increasing. It’s important to validate that our **backend and API layers can sustain the projected load** to prevent similar production issues in the future.
 
-### Sample Request
-```json
-{
-  "header": {
-    "country": "KW",
-    "branchId": "14170",
-    "sourceSystemId": "DvpApp",
-    "userId": "APPACPVOP",
-    "clientIp": "94.129.181.7",
-    "deviceId": "4fc80564a552487496063016cc680e154"
-  },
-  "getCreditCardRequestBody": {
-    "inquireMode": "list"
-  }
-}
+Please note, our team is also working on **home screen optimization** and coordinating with **business stakeholders** to enhance **user experience** and reduce **unnecessary backend calls**.
+
+Appreciate your prompt analysis and confirmation.
+
+---
+
+**Best regards,**  
+**Vetri**  
+_MAS Solution Architect_
