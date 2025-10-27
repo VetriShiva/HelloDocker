@@ -7,3 +7,8 @@ fun existsByUserId(userId: Long): Boolean =
     .resultList
     .isNotEmpty()
 ```
+
+```
+CREATE NONCLUSTERED INDEX IX_users_aura_membership_details_user_id
+ON dbo.users_aura_membership_details (user_id);
+```
