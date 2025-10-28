@@ -1,43 +1,41 @@
-# **Subject:** High Volume of Unnecessary MAS Calls During Logout and Session Timeout Scenarios
+```
+data class LoanScheduledPayment(
+    val autoRepayDay: Int?,
+    val nextDate: LocalDate
+)
 
-Dear Team,
+fun LoanData.toScheduledPayment(today: LocalDate = LocalDate.now()): LoanScheduledPayment {
+    val autoDay = autoRepayDay
+    val baseDate = upcomingInstallmentDate
 
-We have observed that while the **home screen login flow is performing as expected**, the **mobile client is triggering multiple asynchronous MAS API calls during logout, session timeout, and forced logout scenarios**.
+    val nextDate = when {
+        // Case 1: Auto repay not configured
+        autoDay == null -> baseDate
 
-These additional calls are **not required** for proper logout handling and are introducing **unnecessary load on MAS**, especially during peak usage hours.  
-This is a **serious concern**, as MAS is concurrently handling high-priority **payment and transactional requests**.  
-Such redundant calls can lead to queue congestion, delayed responses, and degraded customer experience.
+        // Case 2: Fixed date in same or next month
+        else -> {
+            // Determine the target month
+            val thisMonthTarget = getSafeDate(today.year, today.monthValue, autoDay)
+            val nextMonthTarget = getSafeDate(today.year, today.monthValue + 1, autoDay)
 
-We kindly request the mobile team to **review and optimize the logout and session handling flows** to ensure:
-- Only a single, necessary logout request is sent to MAS.  
-- No background or redundant async calls are executed post logout or session expiry.  
-- Forced logout scenarios gracefully clear local sessions without backend invocation where possible.
+            // If today is before or equal to auto repay day, use current month
+            if (today.isBefore(thisMonthTarget) || today.isEqual(thisMonthTarget))
+                thisMonthTarget
+            else
+                nextMonthTarget
+        }
+    }
 
-Our team is available to assist in reviewing impacted endpoints and recommend prioritization or rate-limiting strategies to maintain MAS stability.
+    return LoanScheduledPayment(autoDay, nextDate)
+}
 
----
-
-## 🔍 **Technical Observations**
-
-| **Metric** | **Observation** | **Impact** |
-|-------------|------------------|-------------|
-| **403 Error Count** | Certain devices show 5–10× higher 403 counts during logout/session timeout | Indicates repeated invalid or expired token calls |
-| **API Paths Involved** | `/authorization/v4/logout/force/webview`, `/authorization/v4/login/biome`, `/authorization/v4/login/password` | Redundant invocation patterns |
-| **Pattern Identified** | Multiple async MAS calls triggered in parallel during logout or session expiry | MAS thread utilization spike during peak hours |
-| **Platform Impact** | Observed on both iOS and Android clients | Client-side implementation behavior, not platform-specific |
-| **Risk** | Queue congestion leading to delay in **payment API** execution | Potential transaction delay and degraded user experience |
-
----
-
-## ✅ **Next Steps / Recommendations**
-
-1. Optimize or suppress redundant MAS calls during logout and timeout flows.  
-2. Introduce a debounce or retry guard in the client SDK for 403 handling.  
-3. Review MAS API priority configuration to deprioritize non-critical calls.  
-4. Validate post-fix behavior in UAT under peak-load simulation.  
-
----
-
-**Best regards,**  
-**Vetri**  
-*Solution Architect – MAS Integration*
+/**
+ * Returns a valid date even if the requested day (e.g. 30 or 31)
+ * doesn't exist in the given month (like February).
+ */
+fun getSafeDate(year: Int, month: Int, day: Int): LocalDate {
+    val ym = YearMonth.of(year, month.coerceIn(1, 12))
+    val validDay = minOf(day, ym.lengthOfMonth()) // handles 28/30/31 gracefully
+    return ym.atDay(validDay)
+}
+```
