@@ -39,3 +39,23 @@ fun getSafeDate(year: Int, month: Int, day: Int): LocalDate {
     return ym.atDay(validDay)
 }
 ```
+
+```
+### Subject: Request to Update | Synthetic Monitoring 2.5.x
+
+**Dear IT Service Management Team,**
+
+Hope you're doing well. 😊  
+
+Kindly find below the updated JAR for Synthetic Monitoring:  
+
+📦 [performance-monitoring-2.5.13-jar-with-dependencies.jar](\\link\svom\n\Userdata\Common_Share\ETD_Stage\DVP\Release\PROD\performance-monitoring\performance-monitoring-2.5\performance-monitoring-2.5.13-jar-with-dependencies.jar)
+
+Please help update this on the server when convenient.  
+Let me know if you need any additional details or support.  
+
+Thanks a lot for your help! 🙏  
+
+**Best regards,**  
+Vetri
+```
