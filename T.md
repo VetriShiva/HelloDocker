@@ -1,3 +1,6 @@
+
+
+Hey Naji, noticed the 403 counts are still on the higher side — maybe some repeated MAS calls (like firm2D reminders). Let’s review when you get a chance 😊
 ```
 data class LoanScheduledPayment(
     val autoRepayDay: Int?,
