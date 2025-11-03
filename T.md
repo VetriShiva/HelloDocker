@@ -63,25 +63,34 @@ Thanks a lot for your help! 🙏
 Vetri
 ```
 
-```
-Here’s a clear and professional task title and description you can use for your Jira, Azure DevOps, or internal tracker:
-Task Title:
-Enhance Loan Details API to Include Loan Payment Details (Repay Date & Due Date)
-Task Description:
-As part of the loan module enhancement, the Loan Details API needs to be updated to include loan payment details, specifically the repayment date and due date for each loan account.
-Objectives:
-Extend the existing Loan Details API response model to include:
-repayDate: the actual date when the last or next payment was made/expected.
-dueDate: the scheduled due date for the next installment.
-Ensure backward compatibility with existing clients.
-Populate these fields based on loan repayment schedule data or related transaction history.
-Validate and handle null values gracefully for loans without a repayment yet.
-Update API documentation (Swagger / Postman / GraphQL schema) accordingly.
-Acceptance Criteria:
-API response includes both repayDate and dueDate fields.
-For active loans, both fields return valid ISO date format (e.g., YYYY-MM-DD).
-For newly created loans with no repayment yet, repayDate should be null.
-Unit and integration tests updated and passed.
-API contract version updated (if applicable).
-Would you like me to add a technical implementation note (e.g., where to fetch these dates — from repayment schedule table or loan transaction history)?
-```
+
+# Loan EMI Schedule – Next Date Calculation Matrix
+
+> **Rule:**  
+> If the selected schedule day is already past in the current month,  
+> → Show **due date (1st of next month)**  
+> → From next month onward, follow user-selected schedule day.  
+> Includes 1-month prepayment & 3-month grace period logic.
+
+| # | Login Date | Schedule Day | Grace (months) | Prepaid (1 mo) | **Next Schedule Date** | **Month+1** | **Month+2** | Reason |
+|---|-------------|---------------|----------------|----------------|-------------------------|--------------|--------------|--------|
+| 1 | 2025-11-19 | 20 | 0 | ❌ | 2025-11-20 | 2025-12-20 | 2026-01-20 | In future same month |
+| 2 | 2025-11-21 | 20 | 0 | ❌ | **2025-12-01 (Due)** | 2025-12-20 | 2026-01-20 | Past-date → due first |
+| 3 | 2025-11-30 | 31 | 0 | ❌ | **2025-12-01 (Due)** | 2025-12-31 | 2026-01-31 | Month end fallback |
+| 4 | 2025-12-02 | 31 | 0 | ❌ | 2025-12-31 | 2026-01-31 | 2026-02-28 | 31 → valid month |
+| 5 | 2025-12-30 | 25 | 0 | ❌ | **2026-01-01 (Due)** | 2026-01-25 | 2026-02-25 | Past-date → due first |
+| 6 | 2025-12-30 | 25 | 0 | ✅ | **2026-01-25** | 2026-02-25 | 2026-03-25 | Prepaid skips due |
+| 7 | 2025-12-10 | 31 | 3 | ❌ | **2026-03-31** | 2026-04-30 | 2026-05-31 | 3-month grace applied |
+| 8 | 2026-01-30 | 31 | 0 | ❌ | 2026-01-31 | 2026-02-28 | 2026-03-31 | Valid same month |
+| 9 | 2026-01-30 | 31 | 0 | ✅ | **2026-02-28** | 2026-03-31 | 2026-04-30 | Prepaid skips Jan |
+| 10 | 2026-02-27 | 31 | 0 | ❌ | 2026-02-28 | 2026-03-31 | 2026-04-30 | Feb fallback |
+| 11 | 2026-02-28 | 20 | 0 | ❌ | **2026-03-01 (Due)** | 2026-03-20 | 2026-04-20 | Past-date → due |
+| 12 | 2026-02-01 | 20 | 0 | ❌ | 2026-02-20 | 2026-03-20 | 2026-04-20 | Future same month |
+
+---
+
+✅ **Key behaviors:**
+- Past schedule → use **due date (1st next month)**.
+- Grace → defer full months (resume after grace).
+- Prepaid → skip immediate next schedule.
+- 31st day → fallback to last day of month (e.g., Feb 28).
