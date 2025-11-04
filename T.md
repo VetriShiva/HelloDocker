@@ -79,6 +79,13 @@ fun LoanData.toScheduledPayment(): LoanScheduledPayment? {
         scheduledDate = nextDate
     )
 }
+
+
+fun changeDaySafely(baseDateTime: ZonedDateTime, newDay: Int): ZonedDateTime {
+    val ym = YearMonth.from(baseDateTime)
+    val validDay = minOf(newDay, ym.lengthOfMonth())
+    return ym.atDay(validDay).atStartOfDay(baseDateTime.zone)
+}
 ```
 
 ```
