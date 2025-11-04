@@ -41,6 +41,44 @@ fun getSafeDate(year: Int, month: Int, day: Int): LocalDate {
     val validDay = minOf(day, ym.lengthOfMonth()) // handles 28/30/31 gracefully
     return ym.atDay(validDay)
 }
+
+
+private val KUWAIT_ZONE_ID = ZoneId.of("Asia/Kuwait")
+
+/**
+ * Safely computes a valid date within the given month.
+ * Example: if day=31 but the month has 30 days, adjusts to 30.
+ */
+fun getValidDate(year: Int, month: Int, day: Int): ZonedDateTime {
+    val safeMonth = month.coerceIn(1, 12)
+    val yearMonth = YearMonth.of(year, safeMonth)
+    val safeDay = day.coerceIn(1, yearMonth.lengthOfMonth())
+
+    return yearMonth
+        .atDay(safeDay)
+        .atStartOfDay(KUWAIT_ZONE_ID)
+}
+
+/**
+ * Computes the next scheduled payment date for a loan, respecting autopay day
+ * and month rollovers.
+ */
+fun LoanData.toScheduledPayment(): LoanScheduledPayment? {
+    val repayDay = autoRepayDay?.toIntOrNull() ?: return null
+    if (repayDay <= 0) return null
+
+    val baseDate = upcomingInstallmentDate ?: return null
+    val nextDate = getValidDate(
+        year = baseDate.year,
+        month = baseDate.monthValue + 1, // move to next month
+        day = repayDay
+    )
+
+    return LoanScheduledPayment(
+        scheduledDay = repayDay,
+        scheduledDate = nextDate
+    )
+}
 ```
 
 ```
