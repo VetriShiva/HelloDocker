@@ -1,4 +1,156 @@
+```
+To integrate mutual TLS (mTLS) HTTP client support into your Spring Boot mock server project, we’ll:
+✅ Goal
+Add an HTTP client with mTLS (mutual TLS authentication)
+Use it to make outgoing secure calls (e.g., to another API)
+Allow mTLS config via application.yml
+🔧 Step-by-Step Integration
+1. ✅ Add HTTP Client Config
+In pom.xml, add this if not already present:
+Copy code
+Xml
+<!-- HTTP Client with TLS support -->
+<dependency>
+    <groupId>org.apache.httpcomponents.client5</groupId>
+    <artifactId>httpclient5</artifactId>
+    <version>5.2</version>
+</dependency>
+2. 📁 Add mTLS Config to application.yml
+Copy code
+Yaml
+mtls:
+  enabled: true
+  key-store: classpath:client-keystore.p12
+  key-store-password: changeit
+  trust-store: classpath:client-truststore.p12
+  trust-store-password: changeit
+You can also move this to the external application.yml you're already using.
+3. 🧠 Create MtlsHttpClientConfig.java
+Copy code
+Java
+package com.example.mockserver.config;
 
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
+import org.apache.hc.core5.ssl.SSLContexts;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import javax.net.ssl.SSLContext;
+import java.io.File;
+import java.security.KeyStore;
+
+@Configuration
+public class MtlsHttpClientConfig {
+
+    @Value("${mtls.enabled}")
+    private boolean mtlsEnabled;
+
+    @Value("${mtls.key-store}")
+    private String keyStorePath;
+
+    @Value("${mtls.key-store-password}")
+    private String keyStorePassword;
+
+    @Value("${mtls.trust-store}")
+    private String trustStorePath;
+
+    @Value("${mtls.trust-store-password}")
+    private String trustStorePassword;
+
+    @Bean
+    public HttpClient httpClient() throws Exception {
+        if (!mtlsEnabled) {
+            return HttpClients.createDefault();
+        }
+
+        SSLContext sslContext = SSLContexts.custom()
+                .loadKeyMaterial(
+                        getFileFromPath(keyStorePath), keyStorePassword.toCharArray(), keyStorePassword.toCharArray()
+                )
+                .loadTrustMaterial(
+                        getFileFromPath(trustStorePath), trustStorePassword.toCharArray()
+                )
+                .build();
+
+        return HttpClients.custom()
+                .setSSLContext(sslContext)
+                .build();
+    }
+
+    private File getFileFromPath(String path) throws Exception {
+        if (path.startsWith("classpath:")) {
+            String cleanPath = path.replace("classpath:", "");
+            return new File(getClass().getClassLoader().getResource(cleanPath).toURI());
+        }
+        return new File(path);
+    }
+}
+4. 🌐 Example Service: Use mTLS HTTP Client
+Copy code
+Java
+package com.example.mockserver.service;
+
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ExternalMtlsClient {
+
+    @Autowired
+    private HttpClient httpClient;
+
+    public String callSecureService(String url) throws Exception {
+        HttpGet request = new HttpGet(url);
+        HttpResponse response = httpClient.execute(request);
+        return EntityUtils.toString(response.getEntity());
+    }
+}
+5. 🌍 Endpoint for Testing Secure Call
+Copy code
+Java
+@GetMapping("/mtls-test")
+public ResponseEntity<String> mtlsTest() throws Exception {
+    String response = externalMtlsClient.callSecureService("https://secure-api.example.com");
+    return ResponseEntity.ok(response);
+}
+🔐 Required Files for mTLS
+Place the following in src/main/resources or your config/ folder:
+client-keystore.p12 — with your client certificate + private key
+client-truststore.p12 — with CA cert of server you're calling
+Generate with:
+Copy code
+Bash
+# Example to generate keystore
+keytool -genkeypair -alias client -keyalg RSA -storetype PKCS12 \
+  -keystore client-keystore.p12 -storepass changeit
+
+# Example truststore
+keytool -importcert -file server-cert.pem -keystore client-truststore.p12 \
+  -storepass changeit -alias server
+✅ Summary
+Feature
+Status
+mTLS support
+✅
+Outgoing HTTPS
+✅
+Configurable
+✅ via YAML
+Runtime ready
+✅
+Would you like:
+🔐 Incoming mTLS support (server-side validation)?
+🧪 Postman collection or test endpoint for mTLS?
+🐳 Dockerfile with cert mounting?
+Let me know and I’ll add that.
+```
 
 Hey Naji, noticed the 403 counts are still on the higher side — maybe some repeated MAS calls (like firm2D reminders). Let’s review when you get a chance 😊
 ```
