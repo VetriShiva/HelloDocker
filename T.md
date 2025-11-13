@@ -1,4 +1,118 @@
 ```
+Here is a complete Spring Boot configuration that sets up a RestTemplate bean with custom key store and trust store, and injects them using properties from application.properties.
+This setup works for calling HTTPS services with mutual TLS (mTLS) if required.
+✅ 1. RestTemplate Configuration with Custom SSL (Java Config)
+Copy code
+Java
+package com.example.config;
+
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+
+import javax.net.ssl.SSLContext;
+import java.io.File;
+import java.io.FileInputStream;
+import java.security.KeyStore;
+
+@Configuration
+public class RestTemplateConfig {
+
+    @Value("${ssl.key-store}")
+    private String keyStorePath;
+
+    @Value("${ssl.key-store-password}")
+    private String keyStorePassword;
+
+    @Value("${ssl.trust-store}")
+    private String trustStorePath;
+
+    @Value("${ssl.trust-store-password}")
+    private String trustStorePassword;
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) throws Exception {
+        // Load KeyStore
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        keyStore.load(new FileInputStream(getFileFromPath(keyStorePath)), keyStorePassword.toCharArray());
+
+        // Load TrustStore
+        KeyStore trustStore = KeyStore.getInstance("JKS");
+        trustStore.load(new FileInputStream(getFileFromPath(trustStorePath)), trustStorePassword.toCharArray());
+
+        // Build SSLContext
+        SSLContext sslContext = SSLContexts.custom()
+                .loadKeyMaterial(keyStore, keyStorePassword.toCharArray())
+                .loadTrustMaterial(trustStore, new TrustSelfSignedStrategy())
+                .build();
+
+        // Set up HTTP client with SSL
+        SSLConnectionSocketFactory socketFactory =
+                new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+
+        CloseableHttpClient httpClient = HttpClients.custom()
+                .setSSLSocketFactory(socketFactory)
+                .build();
+
+        HttpComponentsClientHttpRequestFactory requestFactory =
+                new HttpComponentsClientHttpRequestFactory(httpClient);
+
+        return builder
+                .requestFactory(() -> requestFactory)
+                .build();
+    }
+
+    private File getFileFromPath(String path) {
+        if (path.startsWith("classpath:")) {
+            String cleanPath = path.replace("classpath:", "");
+            return new File(getClass().getClassLoader().getResource(cleanPath).getFile());
+        }
+        return new File(path);
+    }
+}
+📄 2. application.properties
+Copy code
+Properties
+ssl.key-store=classpath:keystore.p12
+ssl.key-store-password=changeit
+ssl.trust-store=classpath:truststore.jks
+ssl.trust-store-password=changeit
+✅ 3. Usage in Your Service Class
+Copy code
+Java
+@Service
+public class MyApiService {
+
+    private final RestTemplate restTemplate;
+
+    public MyApiService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+    public String callSecureEndpoint() {
+        String url = "https://your-secure-api.com/data";
+        return restTemplate.getForObject(url, String.class);
+    }
+}
+🧪 Notes
+Your key store should be .p12 (PKCS#12 format), and trust store usually .jks.
+Place both files in src/main/resources if using classpath: in properties.
+You can verify SSL is working correctly by enabling debug logs:
+-Djavax.net.debug=ssl
+Would you also like the WebClient version for reactive applications, or are you working only with RestTemplate?
+```
+
+
+```
 To integrate mutual TLS (mTLS) HTTP client support into your Spring Boot mock server project, we’ll:
 ✅ Goal
 Add an HTTP client with mTLS (mutual TLS authentication)
