@@ -1,4 +1,28 @@
 ```
+Sure — here is the formal version including environment & build details placeholders (replace as needed):
+Hi Team,
+The reported issue has been fixed, and the latest build has been deployed for validation in the <Environment Name – e.g., UAT / SIT / T4> environment.
+Build / Deployment Details:
+Build Version: <enter build version or tag>
+Deployment Time: <enter timestamp>
+Reference Ticket / Bug ID: <enter ID>
+Requesting QA to proceed with re-testing and perform a full end-to-end regression across all prepaid card journeys to ensure there is no functional or behavioural impact.
+Scenarios to validate:
+Existing user with AURA card
+Existing user without AURA card
+VDK service available and unavailable cases
+Duplicate journey prevention and resume flow
+Error handling, fallback behavior & localization (EN/AR)
+Additionally, kindly share the final E2E test cases and coverage for alignment and to maintain consistency for future regression cycles.
+Please confirm once testing is completed and provide the status (Pass/Fail with evidence).
+Thanks & Regards,
+Vetri
+If you want, I can also provide a Teams message, WhatsApp-style short note, or Jira comment version.
+```
+
+
+
+```
 Here is a complete Spring Boot configuration that sets up a RestTemplate bean with custom key store and trust store, and injects them using properties from application.properties.
 This setup works for calling HTTPS services with mutual TLS (mTLS) if required.
 ✅ 1. RestTemplate Configuration with Custom SSL (Java Config)
