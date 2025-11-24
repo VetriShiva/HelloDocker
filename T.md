@@ -1,3 +1,203 @@
+# OpenAPI Generator - README
+This document explains how to configure, run, and maintain the OpenAPI Generator Maven Plugin used in this module.
+
+------------------------------------------------------------
+
+## 1. Overview
+
+This module uses the OpenAPI Generator Maven Plugin to generate Java model classes from an OpenAPI/Swagger specification.
+
+Benefits:
+- Consistent domain models
+- No manual DTO coding
+- Automatic updates when API spec changes
+- Clean and maintainable code
+
+------------------------------------------------------------
+
+## 2. Plugin Location
+
+The plugin lives in:
+
+pom.xml  ->  build  -> plugins  -> openapi-generator-maven-plugin
+
+Each generation task is added as a separate execution block.
+
+------------------------------------------------------------
+
+## 3. File Structure
+
+module/
+  src/
+    main/
+      java/
+      resources/
+        CivilIdDetails.json
+  pom.xml
+  target/
+    generated-sources/openapi/
+      src/main/java/...
+
+------------------------------------------------------------
+
+## 4. Running Code Generation
+
+### 4.1 Run entire plugin
+
+```
+mvn openapi-generator:generate
+```
+
+### 4.2 Run a specific execution (recommended for multi-module)
+
+```
+mvn -pl <module> openapi-generator:generate -DexecutionId=<id>
+```
+
+Example:
+
+```
+mvn -pl domain/customer openapi-generator:generate -DexecutionId=generate-civil-id-details
+```
+
+------------------------------------------------------------
+
+## 5. Key Configuration Fields
+
+| Field | Description |
+|-------|-------------|
+| inputSpec | Path to OpenAPI JSON/YAML |
+| generatorName | java / kotlin / spring / typescript |
+| output | Generated output folder |
+| modelPackage | Package for DTOs |
+| typeMappings | Override default types |
+| configOptions | Extra settings |
+| generateApis | Enables/disables REST clients |
+| generateModels | Enables/disables model generation |
+
+------------------------------------------------------------
+
+## 6. Java Model Generation Only (No REST Client)
+
+```
+<generateApis>false</generateApis>
+<generateApiTests>false</generateApiTests>
+<generateApiDocumentation>false</generateApiDocumentation>
+
+<generateModels>true</generateModels>
+<generateModelTests>false</generateModelTests>
+<generateModelDocumentation>false</generateModelDocumentation>
+```
+
+------------------------------------------------------------
+
+## 7. Common Java Config Options
+
+```
+<configOptions>
+  <dateLibrary>java8</dateLibrary>
+  <serializableModel>true</serializableModel>
+  <useBeanValidation>false</useBeanValidation>
+  <hideGenerationTimestamp>true</hideGenerationTimestamp>
+  <enumPropertyNaming>original</enumPropertyNaming>
+</configOptions>
+```
+
+------------------------------------------------------------
+
+## 8. Type Mappings
+
+```
+<typeMappings>
+  <typeMapping>
+    ResponseStatus=com.nbk.dvp.utils.client.model.ResponseStatus
+  </typeMapping>
+  <typeMapping>
+    OffsetDateTime=String
+  </typeMapping>
+</typeMappings>
+```
+
+------------------------------------------------------------
+
+## 9. Example Plugin Execution
+
+```
+<execution>
+    <id>generate-civil-id-details</id>
+    <goals>
+        <goal>generate</goal>
+    </goals>
+
+    <configuration>
+        <inputSpec>${project.basedir}/src/main/resources/CivilIdDetails.json</inputSpec>
+        <generatorName>java</generatorName>
+
+        <generateApis>false</generateApis>
+        <generateModels>true</generateModels>
+
+        <output>${project.build.directory}/generated-sources/openapi</output>
+        <sourceFolder>src/main/java</sourceFolder>
+        <modelPackage>com.nbk.dvp.domain.customer.civilid.model</modelPackage>
+
+        <typeMappings>
+            <typeMapping>
+                ResponseStatus=com.nbk.dvp.utils.client.model.ResponseStatus
+            </typeMapping>
+            <typeMapping>
+                OffsetDateTime=String
+            </typeMapping>
+        </typeMappings>
+
+        <configOptions>
+            <dateLibrary>java8</dateLibrary>
+            <serializableModel>true</serializableModel>
+            <hideGenerationTimestamp>true</hideGenerationTimestamp>
+            <useBeanValidation>false</useBeanValidation>
+        </configOptions>
+    </configuration>
+</execution>
+```
+
+------------------------------------------------------------
+
+## 10. Cleaning and Regenerating
+
+```
+mvn clean
+mvn -pl domain/customer openapi-generator:generate -DexecutionId=generate-civil-id-details
+```
+
+------------------------------------------------------------
+
+## 11. Ignore Generated Code (Optional)
+
+Add to .gitignore:
+
+```
+/target/generated-sources/openapi/
+```
+
+------------------------------------------------------------
+
+## 12. Troubleshooting
+
+| Issue | Fix |
+|-------|------|
+| Models not updated | Re-run execution |
+| IntelliJ not showing files | Mark folder as Generated Sources Root |
+| Wrong type | Update typeMappings |
+| Missing default values | Check required fields in OpenAPI spec |
+
+------------------------------------------------------------
+
+## 13. Revision History
+
+| Version | Date | Description |
+|---------|-------|-------------|
+| 1.0 | dd-MMM-yyyy | Initial README |
+
+
 ```
 <execution>
     <id>generate-civil-id-details</id>
