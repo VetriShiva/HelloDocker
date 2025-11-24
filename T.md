@@ -1,4 +1,60 @@
 ```
+<execution>
+    <id>generate-civil-id-details</id>
+    <goals>
+        <goal>generate</goal>
+    </goals>
+
+    <configuration>
+        <!-- Input OpenAPI Spec -->
+        <inputSpec>${project.basedir}/src/main/resources/CivilIdDetails.json</inputSpec>
+
+        <!-- Java Generator -->
+        <generatorName>java</generatorName>
+
+        <!-- Only generate models -->
+        <generateApis>false</generateApis>
+        <generateApiTests>false</generateApiTests>
+        <generateApiDocumentation>false</generateApiDocumentation>
+
+        <generateModels>true</generateModels>
+        <generateModelTests>false</generateModelTests>
+        <generateModelDocumentation>false</generateModelDocumentation>
+
+        <!-- Output directory -->
+        <output>${project.build.directory}/generated-sources/openapi</output>
+        <sourceFolder>src/main/java</sourceFolder>
+
+        <!-- Packages -->
+        <modelPackage>com.nbk.dvp.domain.customer.civilid.model</modelPackage>
+
+        <!-- Custom Type Mappings -->
+        <typeMappings>
+            <typeMapping>
+                ResponseStatus=com.nbk.dvp.utils.client.model.ResponseStatus
+            </typeMapping>
+            <typeMapping>
+                OffsetDateTime=String
+            </typeMapping>
+        </typeMappings>
+
+        <configOptions>
+            <!-- Clean Java POJO configuration -->
+            <dateLibrary>java8</dateLibrary>
+            <useBeanValidation>false</useBeanValidation>
+            <serializableModel>true</serializableModel>
+            <hideGenerationTimestamp>true</hideGenerationTimestamp>
+            <enumPropertyNaming>original</enumPropertyNaming>
+
+            <!-- No client code -->
+            <library>java8</library> <!-- required but ignored when generateApis=false -->
+        </configOptions>
+    </configuration>
+</execution>
+```
+
+
+```
 Sure — here is the formal version including environment & build details placeholders (replace as needed):
 Hi Team,
 The reported issue has been fixed, and the latest build has been deployed for validation in the <Environment Name – e.g., UAT / SIT / T4> environment.
