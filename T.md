@@ -1,4 +1,14 @@
 ```
+Subject: Action Required – Incorrect CardDetails Returned from ESB (AURA Prepaid)
+Hi ,
+We have identified that the MAS error in the AURA Prepaid flow is caused by ESB returning incorrect card details.
+Specifically, when MAS fetches CardDetails from ESB for customer 11346024, ESB returns the data of another customer (113145296). This data inconsistency is the root cause of the failure.
+Requesting your assistance to follow up with the concerned ESB/MAS team to validate and correct the mapping.
+Happy to share more details if required.
+```
+
+
+```
 Subject: AURA Prepaid – CardDetails API Returning Wrong Customer Data
 Hi ,
 Good afternoon. I wanted to bring a small observation to your attention regarding the AURA Prepaid CardDetails API behavior.
