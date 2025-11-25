@@ -1,3 +1,21 @@
+```
+Subject: AURA Prepaid – CardDetails API Returning Wrong Customer Data
+Hi ,
+Good afternoon. I wanted to bring a small observation to your attention regarding the AURA Prepaid CardDetails API behavior.
+When calling GetCardDetails for customer 11346024 (MAZOUN HASAN ALFASHTAKI), MAS is returning the data of a different customer (113145296 – DAWOOD ALI). This mismatch is causing our AURA prepaid flow to fail during validation.
+I have captured the complete request/response, and I’ve highlighted the incorrect customer fields in the attached screenshot.
+From the initial review, this issue seems to be at the MAS layer.
+If you’d like, I can:
+Coordinate with MAS/ESB team for RCA
+Open an incident for tracking
+Provide a short summary for business impact
+Just let me know how you prefer to proceed.
+```
+
+
+
+
+
 # OpenAPI Generator - README
 This document explains how to configure, run, and maintain the OpenAPI Generator Maven Plugin used in this module.
 
