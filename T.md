@@ -1,10 +1,11 @@
 
 ```
-Subject: Request for BR / User Story Details – Loan Installment Feature
-Dear Mohammad Wadhah,
-Hope you are doing well.
-To proceed with the analysis of the Loan Installment issue and ensure we deliver a correct fix without causing any regression, could you please share the Business Requirements / User Story along with the Acceptance Criteria for this feature?
-This will help us trace the exact root cause and align the fix with the expected behaviour.
+Thanks for the update.
+Since this has been reported as a defect, we need a bit more clarification to proceed with the Root Cause Analysis (RCA).
+To properly trace the issue across systems, could you please share:
+The BaNCS Business Requirement (BR) or the expected behaviour defined in BaNCS
+The MAS-side requirement / expected flow for this scenario
+These details will help us identify the exact root cause and apply the correct fix without any regression.
 Thanks a lot for your support.
 ```
 
