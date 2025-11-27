@@ -1,3 +1,130 @@
+```
+Below is the cleanest, production-grade way to load URL-based rate-limit config from a separate YAML file, not from application.yml.
+You’ll get:
+✔ A separate file like rate-limit.yml
+✔ Auto-loading using @PropertySource + YAML loader
+✔ Strong typed config (@ConfigurationProperties)
+✔ Hot-reload compatible (if you add Spring Cloud later)
+✔ Plug-and-play with the earlier filter code
+✅ 1. Create a separate YAML file (outside application.yml)
+src/main/resources/rate-limit.yml
+Copy code
+Yaml
+rate-limit:
+  enabled: true
+
+  default:
+    capacity: 50
+    refill: 50
+    duration: 1m
+
+  urls:
+    - pattern: "/api/loan/**"
+      capacity: 20
+      refill: 20
+      duration: 1m
+
+    - pattern: "/api/card/**"
+      capacity: 10
+      refill: 10
+      duration: 1m
+
+    - pattern: "/api/user/profile"
+      capacity: 5
+      refill: 5
+      duration: 1m
+✅ 2. Add YAML support to load external file
+Spring Boot does NOT load YAML with @PropertySource directly.
+We must add a custom YAML loader.
+YamlPropertySourceFactory.java
+Copy code
+Java
+public class YamlPropertySourceFactory implements PropertySourceFactory {
+
+    @Override
+    public PropertySource<?> createPropertySource(String name, EncodedResource resource) throws IOException {
+        YamlPropertiesFactoryBean factory = new YamlPropertiesFactoryBean();
+        factory.setResources(resource.getResource());
+
+        Properties properties = factory.getObject();
+        return new PropertiesPropertySource(
+                name != null ? name : resource.getResource().getFilename(),
+                properties
+        );
+    }
+}
+✅ 3. Load rate-limit.yml using @PropertySource
+RateLimitConfig.java
+Copy code
+Java
+@Configuration
+@PropertySource(
+    value = "classpath:rate-limit.yml",
+    factory = YamlPropertySourceFactory.class
+)
+@EnableConfigurationProperties(RateLimitProperties.class)
+public class RateLimitConfig { }
+This injects values from rate-limit.yml into your properties.
+✅ 4. Use the same ConfigurationProperties class
+No changes needed other than package.
+RateLimitProperties.java
+Copy code
+Java
+@Data
+@ConfigurationProperties(prefix = "rate-limit")
+public class RateLimitProperties {
+
+    private boolean enabled = true;
+    private LimitConfig defaultConfig;
+    private List<LimitConfig> urls = new ArrayList<>();
+
+    @Data
+    public static class LimitConfig {
+        private String pattern;
+        private int capacity;
+        private int refill;
+        private Duration duration;
+    }
+}
+✅ 5. RateLimitFilter stays the SAME
+No change required.
+It will automatically pick values from the separate YAML.
+🧪 6. Folder structure
+Copy code
+
+src/main/java/com/vetri/ratelimit/
+    - RateLimitConfig.java
+    - RateLimitProperties.java
+    - RateLimitFilter.java
+    - YamlPropertySourceFactory.java
+
+src/main/resources/
+    - application.yml
+    - rate-limit.yml   <-- Separate file
+📌 7. Optional — Load YAML From Outside Jar
+If you want from /config/rate-limit.yml:
+application.yml
+Copy code
+Yaml
+spring.config.import: optional:classpath:rate-limit.yml, optional:file:./config/rate-limit.yml
+Works with Spring Boot 3.x+.
+🚀 Final Summary
+✔ Keep rate-limit.yml completely separate
+✔ Load YAML using custom factory
+✔ Inject into @ConfigurationProperties
+✔ No changes required in your filter logic
+✔ Clean & production-ready
+If you want multi-env external files like:
+rate-limit-dev.yml
+rate-limit-uat.yml
+rate-limit-prod.yml
+I can generate the full setup.
+Just say “add multi-env support”.
+```
+
+
+
+
 
 ```
 Thanks for the update.
