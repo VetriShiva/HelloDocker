@@ -1,3 +1,12 @@
+
+```Subject: Request for BR / User Story Details – Loan Installment Feature
+Dear Mohammad Wadhah,
+Hope you are doing well.
+To proceed with the analysis of the Loan Installment issue and ensure we deliver a correct fix without causing any regression, could you please share the Business Requirements / User Story along with the Acceptance Criteria for this feature?
+This will help us trace the exact root cause and align the fix with the expected behaviour.
+Thanks a lot for your support.
+,```
+
 ```
 Subject: Action Required – Incorrect CardDetails Returned from ESB (AURA Prepaid)
 Hi ,
