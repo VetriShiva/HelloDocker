@@ -1,219 +1,129 @@
 ```
-Below is the clean, production-grade Kotlin implementation for loading rate-limit config from a separate YAML file (e.g., rate-limit.yml) and applying URL-based throttling.
-Everything is rewritten in idiomatic Kotlin.
-✅ 1. Separate YAML file: src/main/resources/rate-limit.yml
+Here is the cleanest, production-grade Kotlin Spring Boot configuration for mapping YAML → configuration properties for URL-based rate limits, exactly how we use in NBK microservices.
+This is the correct idiomatic Kotlin + Spring Boot 3 style (immutable, constructor binding, Duration support, validated).
+✅ 1. application.yml
+Supports multiple URL rules and automatic conversion of window to Duration.
 Copy code
 Yaml
 rate-limit:
-  enabled: true
+  rules:
+    - url: "/api/v1/loan/details"
+      limit: 10
+      window: 1m
+      burst: 3
 
-  default:
-    capacity: 50
-    refill: 50
-    duration: 1m
+    - url: "/api/v1/card/balance"
+      limit: 5
+      window: 30s
 
-  urls:
-    - pattern: "/api/loan/**"
-      capacity: 20
-      refill: 20
-      duration: 1m
-
-    - pattern: "/api/card/**"
-      capacity: 10
-      refill: 10
-      duration: 1m
-
-    - pattern: "/api/user/profile"
-      capacity: 5
-      refill: 5
-      duration: 1m
-✅ 2. Kotlin YAML Loader (because Spring does NOT load YAML with @PropertySource normally)
-YamlPropertySourceFactory.kt
+    - url: "/api/v1/customer/profile"
+      limit: 20
+      window: 2m
+✅ 2. Create RateLimitProperties.kt
+Immutable, constructor binding, validated, supports Duration.
 Copy code
 Kotlin
-package com.vetri.ratelimit
-
-import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
-import org.springframework.core.env.PropertiesPropertySource
-import org.springframework.core.env.PropertySource
-import org.springframework.core.io.support.EncodedResource
-import org.springframework.core.io.support.PropertySourceFactory
-
-class YamlPropertySourceFactory : PropertySourceFactory {
-    override fun createPropertySource(
-        name: String?,
-        resource: EncodedResource
-    ): PropertySource<*> {
-
-        val factory = YamlPropertiesFactoryBean()
-        factory.setResources(resource.resource)
-
-        val properties = factory.getObject()
-            ?: throw IllegalArgumentException("Could not load YAML file: ${resource.resource}")
-
-        return PropertiesPropertySource(
-            name ?: resource.resource.filename!!,
-            properties
-        )
-    }
-}
-✅ 3. Kotlin Configuration to load rate-limit.yml
-RateLimitConfig.kt
-Copy code
-Kotlin
-package com.vetri.ratelimit
-
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.PropertySource
-import org.springframework.boot.context.properties.EnableConfigurationProperties
-
-@Configuration
-@PropertySource(
-    value = ["classpath:rate-limit.yml"],
-    factory = YamlPropertySourceFactory::class
-)
-@EnableConfigurationProperties(RateLimitProperties::class)
-class RateLimitConfig
-✅ 4. Kotlin @ConfigurationProperties model
-RateLimitProperties.kt
-Copy code
-Kotlin
-package com.vetri.ratelimit
+package com.vetri.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.bind.DefaultValue
+import org.springframework.boot.context.properties.ConstructorBinding
 import java.time.Duration
 
 @ConfigurationProperties(prefix = "rate-limit")
-data class RateLimitProperties(
-    var enabled: Boolean = true,
-    var default: LimitConfig = LimitConfig(),
-    var urls: List<LimitConfig> = emptyList()
+data class RateLimitProperties @ConstructorBinding constructor(
+    val rules: List<RateLimitRule> = emptyList()
+)
+
+data class RateLimitRule(
+    val url: String,
+    val limit: Int,
+    val window: Duration,
+    @DefaultValue("0")
+    val burst: Int = 0
+)
+🔥 Highlights
+window: Duration → Spring automatically converts 1m, 30s, 2h
+burst defaults to 0
+No mutable vars
+Perfect for real production microservices
+✅ 3. Enable Configuration Properties
+In your Application.kt:
+Copy code
+Kotlin
+@EnableConfigurationProperties(RateLimitProperties::class)
+@SpringBootApplication
+class Application
+
+fun main(args: Array<String>) {
+    runApplication<Application>(*args)
+}
+✅ 4. Usage Example — Inject & Build a Map
+Copy code
+Kotlin
+@Service
+class RateLimitService(
+    private val properties: RateLimitProperties
 ) {
-    data class LimitConfig(
-        var pattern: String? = null,
-        var capacity: Int = 0,
-        var refill: Int = 0,
-        var duration: Duration = Duration.ZERO
-    )
+
+    private val ruleMap: Map<String, RateLimitRule> =
+        properties.rules.associateBy { it.url }
+
+    fun getRuleFor(url: String): RateLimitRule? =
+        ruleMap[url]
 }
-✅ 5. Kotlin Rate Limit Filter (Bucket4j)
-RateLimitFilter.kt
+⭐ Optional Enhancements
+1️⃣ Support Ant patterns (/loan/**)
+Add Spring Web matcher:
 Copy code
 Kotlin
-package com.vetri.ratelimit
+import org.springframework.util.AntPathMatcher
 
-import io.github.bucket4j.Bandwidth
-import io.github.bucket4j.Bucket
-import io.github.bucket4j.Refill
-import jakarta.servlet.FilterChain
-import jakarta.servlet.ServletException
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
-import org.springframework.http.HttpStatus
-import org.springframework.stereotype.Component
-import org.springframework.web.filter.OncePerRequestFilter
-import org.springframework.web.util.pattern.PathPatternParser
-import java.io.IOException
-import java.util.concurrent.ConcurrentHashMap
+private val matcher = AntPathMatcher()
 
-@Component
-class RateLimitFilter(
-    private val props: RateLimitProperties
-) : OncePerRequestFilter() {
-
-    private val parser = PathPatternParser()
-    private val buckets = ConcurrentHashMap<String, Bucket>()
-
-    override fun doFilterInternal(
-        request: HttpServletRequest,
-        response: HttpServletResponse,
-        filterChain: FilterChain
-    ) {
-        if (!props.enabled) {
-            filterChain.doFilter(request, response)
-            return
-        }
-
-        val url = request.requestURI
-        val cfg = matchConfig(url)
-
-        val bucketKey = cfg.pattern ?: "default"
-        val bucket = buckets.computeIfAbsent(bucketKey) {
-            createBucket(cfg)
-        }
-
-        if (bucket.tryConsume(1)) {
-            filterChain.doFilter(request, response)
-        } else {
-            response.status = HttpStatus.TOO_MANY_REQUESTS.value()
-            response.writer.write("Rate limit exceeded for $url")
-        }
-    }
-
-    private fun matchConfig(url: String): RateLimitProperties.LimitConfig {
-        props.urls.forEach { cfg ->
-            val pattern = cfg.pattern ?: return@forEach
-            val p = parser.parse(pattern)
-            if (p.matches(org.springframework.web.util.pattern.PathContainer.parsePath(url))) {
-                return cfg
-            }
-        }
-        return props.default
-    }
-
-    private fun createBucket(cfg: RateLimitProperties.LimitConfig): Bucket {
-        val refill = Refill.greedy(cfg.refill.toLong(), cfg.duration)
-        val limit = Bandwidth.classic(cfg.capacity.toLong(), refill)
-        return Bucket.builder().addLimit(limit).build()
-    }
-}
-✅ 6. Optional — Register filter order
-FilterRegistration.kt
+fun findRule(url: String): RateLimitRule? =
+    properties.rules.firstOrNull { matcher.match(it.url, url) }
+2️⃣ Add validation
 Copy code
 Kotlin
-package com.vetri.ratelimit
+import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotBlank
 
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.boot.web.servlet.FilterRegistrationBean
+data class RateLimitRule(
+    @field:NotBlank
+    val url: String,
 
-@Configuration
-class FilterRegistration {
+    @field:Min(1)
+    val limit: Int,
 
-    @Bean
-    fun rateLimitFilterBean(filter: RateLimitFilter): FilterRegistrationBean<RateLimitFilter> {
-        return FilterRegistrationBean<RateLimitFilter>().apply {
-            this.filter = filter
-            order = 1
-        }
-    }
-}
-📌 7. Project Folder Structure (Kotlin)
+    val window: Duration,
+
+    @DefaultValue("0")
+    val burst: Int = 0
+)
+Add:
 Copy code
-
-src/main/kotlin/com/vetri/ratelimit/
-    - YamlPropertySourceFactory.kt
-    - RateLimitConfig.kt
-    - RateLimitProperties.kt
-    - RateLimitFilter.kt
-    - FilterRegistration.kt
-
-src/main/resources/
-    - application.yml
-    - rate-limit.yml   <-- your separate file
-🚀 8. Vetri-friendly Summary (Short)
-✔ rate-limit.yml fully isolated
-✔ Kotlin version of all classes
-✔ Loaded using custom YAML loader
-✔ URL pattern matching
-✔ Bucket4j per-URL throttling
-✔ Centralized config without touching application.yml
-If you want, I can also generate:
-✅ Starter project ZIP (Kotlin + Spring Boot 3)
-✅ Multi-env YAML file loading (rate-limit-dev.yml, rate-limit-prod.yml)
-✅ Redis/Redisson distributed rate limit
-✅ Grafana/Prometheus metrics exposed
-Just tell me “Generate ZIP” or “Add multi-env support”.
+Kotlin
+@Validated
+To your RateLimitProperties.
+3️⃣ Hazelcast or Redis distributed rate limiting
+Ready to integrate with your NBK Hazelcast cluster.
+I can generate any of these:
+🔹 Hazelcast in-memory rate limiter
+🔹 Redis sliding-window rate limiter
+🔹 AOP-based rate limiting
+🔹 WebFilter rate limiting (for reactive)
+🔹 HandlerInterceptor rate limiting (for MVC)
+✅ If you want next:
+I can generate full production-ready rate limiting module:
+YAML config
+Kotlin classes
+Interceptor
+Annotation (@RateLimit)
+Counter store (Hazelcast/Redis)
+Unit tests
+README + diagram
+Just tell me Hazelcast or Redis.
 ```
 
 
