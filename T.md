@@ -1,13 +1,7 @@
 ```
-Below is the cleanest, production-grade way to load URL-based rate-limit config from a separate YAML file, not from application.yml.
-You’ll get:
-✔ A separate file like rate-limit.yml
-✔ Auto-loading using @PropertySource + YAML loader
-✔ Strong typed config (@ConfigurationProperties)
-✔ Hot-reload compatible (if you add Spring Cloud later)
-✔ Plug-and-play with the earlier filter code
-✅ 1. Create a separate YAML file (outside application.yml)
-src/main/resources/rate-limit.yml
+Below is the clean, production-grade Kotlin implementation for loading rate-limit config from a separate YAML file (e.g., rate-limit.yml) and applying URL-based throttling.
+Everything is rewritten in idiomatic Kotlin.
+✅ 1. Separate YAML file: src/main/resources/rate-limit.yml
 Copy code
 Yaml
 rate-limit:
@@ -33,93 +27,193 @@ rate-limit:
       capacity: 5
       refill: 5
       duration: 1m
-✅ 2. Add YAML support to load external file
-Spring Boot does NOT load YAML with @PropertySource directly.
-We must add a custom YAML loader.
-YamlPropertySourceFactory.java
+✅ 2. Kotlin YAML Loader (because Spring does NOT load YAML with @PropertySource normally)
+YamlPropertySourceFactory.kt
 Copy code
-Java
-public class YamlPropertySourceFactory implements PropertySourceFactory {
+Kotlin
+package com.vetri.ratelimit
 
-    @Override
-    public PropertySource<?> createPropertySource(String name, EncodedResource resource) throws IOException {
-        YamlPropertiesFactoryBean factory = new YamlPropertiesFactoryBean();
-        factory.setResources(resource.getResource());
+import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
+import org.springframework.core.env.PropertiesPropertySource
+import org.springframework.core.env.PropertySource
+import org.springframework.core.io.support.EncodedResource
+import org.springframework.core.io.support.PropertySourceFactory
 
-        Properties properties = factory.getObject();
-        return new PropertiesPropertySource(
-                name != null ? name : resource.getResource().getFilename(),
-                properties
-        );
+class YamlPropertySourceFactory : PropertySourceFactory {
+    override fun createPropertySource(
+        name: String?,
+        resource: EncodedResource
+    ): PropertySource<*> {
+
+        val factory = YamlPropertiesFactoryBean()
+        factory.setResources(resource.resource)
+
+        val properties = factory.getObject()
+            ?: throw IllegalArgumentException("Could not load YAML file: ${resource.resource}")
+
+        return PropertiesPropertySource(
+            name ?: resource.resource.filename!!,
+            properties
+        )
     }
 }
-✅ 3. Load rate-limit.yml using @PropertySource
-RateLimitConfig.java
+✅ 3. Kotlin Configuration to load rate-limit.yml
+RateLimitConfig.kt
 Copy code
-Java
+Kotlin
+package com.vetri.ratelimit
+
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.PropertySource
+import org.springframework.boot.context.properties.EnableConfigurationProperties
+
 @Configuration
 @PropertySource(
-    value = "classpath:rate-limit.yml",
-    factory = YamlPropertySourceFactory.class
+    value = ["classpath:rate-limit.yml"],
+    factory = YamlPropertySourceFactory::class
 )
-@EnableConfigurationProperties(RateLimitProperties.class)
-public class RateLimitConfig { }
-This injects values from rate-limit.yml into your properties.
-✅ 4. Use the same ConfigurationProperties class
-No changes needed other than package.
-RateLimitProperties.java
+@EnableConfigurationProperties(RateLimitProperties::class)
+class RateLimitConfig
+✅ 4. Kotlin @ConfigurationProperties model
+RateLimitProperties.kt
 Copy code
-Java
-@Data
+Kotlin
+package com.vetri.ratelimit
+
+import org.springframework.boot.context.properties.ConfigurationProperties
+import java.time.Duration
+
 @ConfigurationProperties(prefix = "rate-limit")
-public class RateLimitProperties {
+data class RateLimitProperties(
+    var enabled: Boolean = true,
+    var default: LimitConfig = LimitConfig(),
+    var urls: List<LimitConfig> = emptyList()
+) {
+    data class LimitConfig(
+        var pattern: String? = null,
+        var capacity: Int = 0,
+        var refill: Int = 0,
+        var duration: Duration = Duration.ZERO
+    )
+}
+✅ 5. Kotlin Rate Limit Filter (Bucket4j)
+RateLimitFilter.kt
+Copy code
+Kotlin
+package com.vetri.ratelimit
 
-    private boolean enabled = true;
-    private LimitConfig defaultConfig;
-    private List<LimitConfig> urls = new ArrayList<>();
+import io.github.bucket4j.Bandwidth
+import io.github.bucket4j.Bucket
+import io.github.bucket4j.Refill
+import jakarta.servlet.FilterChain
+import jakarta.servlet.ServletException
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Component
+import org.springframework.web.filter.OncePerRequestFilter
+import org.springframework.web.util.pattern.PathPatternParser
+import java.io.IOException
+import java.util.concurrent.ConcurrentHashMap
 
-    @Data
-    public static class LimitConfig {
-        private String pattern;
-        private int capacity;
-        private int refill;
-        private Duration duration;
+@Component
+class RateLimitFilter(
+    private val props: RateLimitProperties
+) : OncePerRequestFilter() {
+
+    private val parser = PathPatternParser()
+    private val buckets = ConcurrentHashMap<String, Bucket>()
+
+    override fun doFilterInternal(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        filterChain: FilterChain
+    ) {
+        if (!props.enabled) {
+            filterChain.doFilter(request, response)
+            return
+        }
+
+        val url = request.requestURI
+        val cfg = matchConfig(url)
+
+        val bucketKey = cfg.pattern ?: "default"
+        val bucket = buckets.computeIfAbsent(bucketKey) {
+            createBucket(cfg)
+        }
+
+        if (bucket.tryConsume(1)) {
+            filterChain.doFilter(request, response)
+        } else {
+            response.status = HttpStatus.TOO_MANY_REQUESTS.value()
+            response.writer.write("Rate limit exceeded for $url")
+        }
+    }
+
+    private fun matchConfig(url: String): RateLimitProperties.LimitConfig {
+        props.urls.forEach { cfg ->
+            val pattern = cfg.pattern ?: return@forEach
+            val p = parser.parse(pattern)
+            if (p.matches(org.springframework.web.util.pattern.PathContainer.parsePath(url))) {
+                return cfg
+            }
+        }
+        return props.default
+    }
+
+    private fun createBucket(cfg: RateLimitProperties.LimitConfig): Bucket {
+        val refill = Refill.greedy(cfg.refill.toLong(), cfg.duration)
+        val limit = Bandwidth.classic(cfg.capacity.toLong(), refill)
+        return Bucket.builder().addLimit(limit).build()
     }
 }
-✅ 5. RateLimitFilter stays the SAME
-No change required.
-It will automatically pick values from the separate YAML.
-🧪 6. Folder structure
+✅ 6. Optional — Register filter order
+FilterRegistration.kt
+Copy code
+Kotlin
+package com.vetri.ratelimit
+
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.boot.web.servlet.FilterRegistrationBean
+
+@Configuration
+class FilterRegistration {
+
+    @Bean
+    fun rateLimitFilterBean(filter: RateLimitFilter): FilterRegistrationBean<RateLimitFilter> {
+        return FilterRegistrationBean<RateLimitFilter>().apply {
+            this.filter = filter
+            order = 1
+        }
+    }
+}
+📌 7. Project Folder Structure (Kotlin)
 Copy code
 
-src/main/java/com/vetri/ratelimit/
-    - RateLimitConfig.java
-    - RateLimitProperties.java
-    - RateLimitFilter.java
-    - YamlPropertySourceFactory.java
+src/main/kotlin/com/vetri/ratelimit/
+    - YamlPropertySourceFactory.kt
+    - RateLimitConfig.kt
+    - RateLimitProperties.kt
+    - RateLimitFilter.kt
+    - FilterRegistration.kt
 
 src/main/resources/
     - application.yml
-    - rate-limit.yml   <-- Separate file
-📌 7. Optional — Load YAML From Outside Jar
-If you want from /config/rate-limit.yml:
-application.yml
-Copy code
-Yaml
-spring.config.import: optional:classpath:rate-limit.yml, optional:file:./config/rate-limit.yml
-Works with Spring Boot 3.x+.
-🚀 Final Summary
-✔ Keep rate-limit.yml completely separate
-✔ Load YAML using custom factory
-✔ Inject into @ConfigurationProperties
-✔ No changes required in your filter logic
-✔ Clean & production-ready
-If you want multi-env external files like:
-rate-limit-dev.yml
-rate-limit-uat.yml
-rate-limit-prod.yml
-I can generate the full setup.
-Just say “add multi-env support”.
+    - rate-limit.yml   <-- your separate file
+🚀 8. Vetri-friendly Summary (Short)
+✔ rate-limit.yml fully isolated
+✔ Kotlin version of all classes
+✔ Loaded using custom YAML loader
+✔ URL pattern matching
+✔ Bucket4j per-URL throttling
+✔ Centralized config without touching application.yml
+If you want, I can also generate:
+✅ Starter project ZIP (Kotlin + Spring Boot 3)
+✅ Multi-env YAML file loading (rate-limit-dev.yml, rate-limit-prod.yml)
+✅ Redis/Redisson distributed rate limit
+✅ Grafana/Prometheus metrics exposed
+Just tell me “Generate ZIP” or “Add multi-env support”.
 ```
 
 
