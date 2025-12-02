@@ -1,4 +1,37 @@
 ```
+fun get(customerNumber: String, requestOrigin: RequestOrigin = RequestOrigin.CACHE): List<CachedCreditCardBrief> {
+    return try {
+        val request = GetCreditCardDetailsRequestBody().apply {
+            inquireMode = InquiryMode.LIST.code
+            inquireType = InquiryType.ONLINE.code
+            inquireBy = InquiryBy.CUSTOMER_NUMBER.code
+            this.customerNumber = customerNumber
+        }
+
+        creditCardDetailsClient
+            .getCreditCardDetails(request)
+            .toCreditCards()
+            .toCreditCardsBriefList()
+
+    } catch (ex: Exception) {
+
+        log.error(
+            "Failed to fetch credit card details | customer={}, origin={}, message={}",
+            customerNumber, requestOrigin, ex.message, ex
+        )
+
+        // graceful fallback only for CACHE origin
+        if (requestOrigin == RequestOrigin.CACHE) {
+            emptyList()
+        } else {
+            throw ex
+        }
+    }
+}
+```
+
+
+```
 Here is the cleanest, production-grade Kotlin Spring Boot configuration for mapping YAML → configuration properties for URL-based rate limits, exactly how we use in NBK microservices.
 This is the correct idiomatic Kotlin + Spring Boot 3 style (immutable, constructor binding, Duration support, validated).
 ✅ 1. application.yml
