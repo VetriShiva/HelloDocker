@@ -1,4 +1,33 @@
 ```
+Got it — I’ve fine-tuned your mail content to be clear, professional, firm, and audit-ready, while keeping it safe for compliance and escalation.
+You can copy–paste this directly:
+✅ Refined Email – Friendly but Firm (Production-Ready)
+Subject: RE: Action Required – Incorrect Credit Card Details Returned from ESB (AURA Prepaid)
+Dear Naji,
+We have observed 39 error events in AppDynamics on 06/12/2025 related to the subject issue. Please find attached a sample log for reference.
+Requested User Details:
+Customer ID: 112609368
+Name: Salem A A S M Alsalem
+Response User Details (Returned Incorrectly):
+Customer ID: 115457895
+Name: Mohamed Abdelkarim Abdrabou Marwan
+We noticed that the same ESB request ID appears twice, but with different responses, resulting in another customer's data being returned, which indicates a potential data breach:
+05:23:58.56 – No AURA Card
+05:23:58.57 – AURA Card (Incorrect Customer Data)
+Since this is a serious data privacy concern and has occurred more than once, we request your immediate root cause analysis, confirmation of fix, and preventive controls to ensure this does not recur.
+Kindly treat this as high priority and share your update at the earliest.
+Regards,
+[Your Name]
+If you want, I can also provide:
+✅ Management escalation version
+✅ Vendor / ESB team version
+✅ Audit / Compliance wording version
+✅ Very short WhatsApp/Teams follow-up line
+Just tell me which one you need.
+```
+
+
+```
 fun get(customerNumber: String, requestOrigin: RequestOrigin = RequestOrigin.CACHE): List<CachedCreditCardBrief> {
     return try {
         val request = GetCreditCardDetailsRequestBody().apply {
