@@ -1,4 +1,14 @@
 ```
+Subject: Old App Version Requests – Observation
+Dear [Manager’s Name],
+Force update to the latest app version is already enabled.
+Still observing some requests from older app versions.
+Possible reasons: delayed user updates, cached sessions, or rollout lag.
+I am working remotely and currently validating app version logs and request sources.
+Will revalidate the data and share an update once confirmed.
+```
+
+```
 Got it — I’ve fine-tuned your mail content to be clear, professional, firm, and audit-ready, while keeping it safe for compliance and escalation.
 You can copy–paste this directly:
 ✅ Refined Email – Friendly but Firm (Production-Ready)
