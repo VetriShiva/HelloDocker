@@ -1,4 +1,20 @@
 ```
+SELECT
+substring(
+  errorMessage,
+  indexof(errorMessage, 'https://'),
+  indexof(errorMessage, '":', indexof(errorMessage, 'https://')) 
+    - indexof(errorMessage, 'https://')
+) AS downstreamUrl,
+count(*) AS timeoutCount
+FROM transactions
+WHERE errorMessage LIKE '%Read timed out%'
+GROUP BY downstreamUrl
+SINCE 1 hour
+```
+
+
+```
 Subject: Old App Version Requests – Observation
 Dear [Manager’s Name],
 Force update to the latest app version is already enabled.
