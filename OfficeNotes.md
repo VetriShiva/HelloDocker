@@ -24,7 +24,8 @@ Save this and thank yourself later 👋 😊 See less
 ```
 ----
 # Here are 10 mistakes that can impact your salary hikes:
-```1️⃣Lacking skills💔: Not upskilling or reskilling.
+```
+1️⃣Lacking skills💔: Not upskilling or reskilling.
 2️⃣Poor communication🗣️: Not articulating achievements.
 3️⃣Not networking👥: Missing out on opportunities.
 4️⃣Being too rigid💪: Not adapting to changes.
@@ -33,5 +34,6 @@ Save this and thank yourself later 👋 😊 See less
 7️⃣Giving up easily🚫: Not pushing through challenges.
 8️⃣Office politics🤐: Getting caught up in drama.
 9️⃣Not asking for feedback🤔: Missing growth opportunities.
-🔟Being complacent😎: Getting too comfortable.```
+🔟Being complacent😎: Getting too comfortable.
+```
 ---
