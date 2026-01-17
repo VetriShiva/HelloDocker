@@ -373,7 +373,41 @@ Dm for consultations! Thank me later 👋 See less
 20. You’re resilient– Setbacks bounce off you; you keep moving forward with optimism💯
 For 1:1 consultation please dm! See you in my next reel👋 See less
 
+20 corporate etiquette don'ts you mush know before
+2️⃣0️⃣Don’t treat Freshers/intern as assistants. Today’s Intern tomorrows interviewer.😎
+1️⃣9️⃣Don’t make office bestie alliances. Politics ages you faster. 🤨
+1️⃣8️⃣Don’t believe vague LinkedIn Rants 🧐
+1️⃣7️⃣Don’t be the meeting note thief. Credit where credit’s due. 🏦
+1️⃣6️⃣Don’t send gentle “gentle reminders” every 5 hours. That’s harassment form. ✖️⏱️
+1️⃣5️⃣Don’t flirt where you earn-chaos is not a career strategy. 💯
+1️⃣4️⃣Don’t talk over women- anybody. It’s 2025 not not Mad Men. ⏲️
+1️⃣3️⃣Don’t reheat fish in office microwave- this is war. 🐟🎣
+1️⃣2️⃣Don’t call people after 8pm untill and unleas someone’s literally on fire. ⏰
+1️⃣1️⃣Don’t show up in crocs unless you own the place. 🤞🏼
+1️⃣0️⃣Don’t gossip- HR ALWAYS FINDS OUR BEFORE THE PERSON DOES ..😁
+9️⃣Don’t brag about being so busy, we all have calendars😑😅
+8️⃣Don’t ghost meeting invite - decline like an adult. 👻
+7️⃣Don’t hover around someone’s desk- it’s not an open mic night. 🖥️
+6️⃣Don’t interrupt seniors to show that you know it too. ‼️
+5️⃣Don’t cc the whole company it’s not a breaking news. 📰
+4️⃣Do not use your office chats like it’s your diary. 📔 
+3️⃣Do not eat loud snacks during meeting, it’s not a ASRM episode. 🍟
+2️⃣Do not email as discussed- when you accidentally mean “i told you so”. 📮
+1️⃣Your trauma isn’t team building material. 🙃
+Dm for 1:1 consultation! 
+Thank me later👋 See less
 
-
+10 reasons why switching job every 1.5 years increases salary faster 
+🔟Stronger Resume: Multiple roles show growth and versatility. 
+9️⃣More Confidende: New environment build adaptibility. 
+8️⃣Better Work-Life Fit: You choose better culture and flexibility. 
+7️⃣Less Office Politics: You Leave before it gets toxic. 
+6️⃣Stronger Negotiation power: You demand better pay. 💰 
+5️⃣More Career Options: Each move open newer path. 
+4️⃣No stagnation: You avoid slow and repetative roles. 
+3️⃣Higher market value: You become more in demand. 
+2️⃣Faster Skill growth: New roles help you learn quickly. 
+1️⃣Bigger Hikes: Switching gives higher salary jump than appraisals. 
+Save for interview purpose and thank me late. 👋 See less
 
 ```
