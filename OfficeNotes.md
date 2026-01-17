@@ -410,4 +410,58 @@ Thank me later👋 See less
 1️⃣Bigger Hikes: Switching gives higher salary jump than appraisals. 
 Save for interview purpose and thank me late. 👋 See less
 
+10 reasons to convince your manager when your are late for office
+1. Medical Emergency 🚨 – “My father’s fever spiked at 7 am, I had to rush them to the clinic before heading in.”
+2. Public‑transport breakdown 🚂– “The metro line was halted due to a signal fault; I waited for the next train and missed the first bus.”
+3. Car accident on the way 🚙– “I was involved in a minor fiddle‑bender; the police needed a statement before I could drive again.”
+4. Power outage at home ⚡️– “A sudden blackout knocked out my alarm clock and Wi‑Fi, so I couldn’t log in for the morning stand‑up.”
+5. Family bereavement🧑‍🧑‍🧒‍🧒– “I received news of a close relative’s passing and had to arrange travel on short notice.”
+6. Severe weather☔️– “A flash flood made the main road impassable; I had to take a longer, safer route.”
+7. Work‑related site visit ran overtime⏱️– “The client meeting at the partner’s office overran, and I couldn’t leave until the contract was signed.”
+8. Parents/child‑care issue🚸– “My daycare called because the backup teacher/doctor didn’t show up; I had to find emergency care before coming in.”
+9. Personal safety concern😷– “I encountered a sudden accident on the highway and was advised to wait for clearance.”
+10. Unexpected legal obligation👩‍⚖️– “I was summoned to appear at the courthouse for a jury duty notice that arrived yesterday.”
+Thank me later 👋 
+#CorporateInsider #9to5 #corporatereels #corporate #trend #virals #viralvideos #officehacks See less
+
+20 smart leave reasons every employee must know
+1. I’m unwell and unable to attend to work🤒
+2. ⁠My doc has told me to take rest so taking a leave for the day😷
+3. ⁠I have a pre scheduled medical appointment💻
+4. ⁠I need to attend to a family medical emergency so need a leave for the day🚨
+5. ⁠I have a pre planned doctors appointment so need a leave for the day🧑‍⚕️
+6. ⁠I need to completed important government related work so need a leave for the day👩‍⚖️
+7. ⁠I have urgent bank/financial documents to handle to need a leave💴
+8. ⁠I need to be present at home to address an essential repair. So need a leaves for 2days📇
+9. ⁠I’m facing Internet connectivity issue so cannot work today🛜
+10. ⁠I need to travel unexpectedly to a family function/emergency so need 2days of leave🧑‍🧒‍🧒
+11. ⁠I need to attend family function that requires my presence🧑‍🧑‍🧒‍🧒
+12. ⁠I need a child/dependent care responsibilities that need my help🧒
+13. ⁠I need a mental health day to rest and resume work with better clarity⛑️
+14. ⁠There’s has been a bereavement in the family and i request a leave for 2days😞
+15. ⁠I’m unable to commute due to severe weather/transport related issues🚌
+16. ⁠I need to leave to attend an exam or academic commitment📞
+17. ⁠I’m in the process of relocation and house shifting so need a leave🏠
+18. ⁠I’m experiencing a minor illness or viral infections so require work from home today🤒🤒🤒🤒
+19. ⁠I have a planned personal day to manage essential task so need leave for the day🤓
+20. ⁠I need to complete important legal documentation work so need a leave for the day👩‍⚖️
+Thank me later 👋 
+#CorporateInsider #9to5 #corporatereels #corporate #trend #virals #viralvideos #officehacks See less
+
+
+10 boundaries to maintain with your colleagues
+1. 🤫Don’t overshare your personal life. Don’t overshare your financial problems. Don’t share about your spouse or future plans. 
+2. 😇Be Friendly not friends. There’s a difference.
+3. 🌚Avoid gossips. Some people just gossip to check if you play along. 
+4. 😅Say no without guilt. Over helping kills your own productivity. 
+5. 🤘🏻Don’t mix flirting with professionalism. It gets too dirty. 
+6. 🗣️Set clear response time. You are not available 24*7.
+7. 🧠Protect your ideas. Not every brainstorm needs to be public. 
+8. ✡️Don’t join every group chat. Your peace is not up for debate. 
+9. 😖Try to disengage from any drama. Don’t take any sides. 
+10. 👩‍💻Remember- It’s work not family. You owe professionalism and not emotional labor. 
+#CorporateInsider #9to5 #corporatereels #corporate #trend #virals #viralvideos #officehacks See less
+
+
+
 ```
