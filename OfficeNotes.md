@@ -1,4 +1,4 @@
-#Here are 20 formal ways to say you’ll skip office:
+# Here are 20 formal ways to say you’ll skip office:
 ```
 1️⃣“Please consider, I’ll be absent today 😷.”
 2️⃣“Taking a sick leave, Please consider 🙏.”
@@ -23,3 +23,15 @@
 Save this and thank yourself later 👋 😊 See less
 ```
 ----
+# Here are 10 mistakes that can impact your salary hikes:
+```1️⃣Lacking skills💔: Not upskilling or reskilling.
+2️⃣Poor communication🗣️: Not articulating achievements.
+3️⃣Not networking👥: Missing out on opportunities.
+4️⃣Being too rigid💪: Not adapting to changes.
+5️⃣Lacking initiative😴: Waiting for tasks instead of taking ownership.
+6️⃣Not meeting deadlines⏰: Missing targets impacts credibility.
+7️⃣Giving up easily🚫: Not pushing through challenges.
+8️⃣Office politics🤐: Getting caught up in drama.
+9️⃣Not asking for feedback🤔: Missing growth opportunities.
+🔟Being complacent😎: Getting too comfortable.```
+---
