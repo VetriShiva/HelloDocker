@@ -1,4 +1,5 @@
-Here are 20 formal ways to say you’ll skip office:
+#Here are 20 formal ways to say you’ll skip office:
+```
 1️⃣“Please consider, I’ll be absent today 😷.”
 2️⃣“Taking a sick leave, Please consider 🙏.”
 3️⃣ “Unable to attend office today 🛋️.”
@@ -20,3 +21,5 @@ Here are 20 formal ways to say you’ll skip office:
 1️⃣9️⃣ “Taking a day off for personal reasons 🌿.”
 2️⃣0️⃣ “Unable to come to office, Please consider 📣.”
 Save this and thank yourself later 👋 😊 See less
+```
+----
