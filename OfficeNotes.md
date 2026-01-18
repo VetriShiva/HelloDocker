@@ -463,5 +463,35 @@ Thank me later 👋
 #CorporateInsider #9to5 #corporatereels #corporate #trend #virals #viralvideos #officehacks See less
 
 
+Someone stole your idea and got promoted for it.
+Now you guard everything.
+Share a strategy? You fear, they will take credit.
+Help a colleague? You fear that they will replace you.
+That reaction is understandable.
+When you have been burned once, your brain stops optimizing for growth and starts optimizing for safety.
+But here is the uncomfortable truth:
+If you play defence for too long, you become even more invisible.
+The shift is not “be generous and trust everyone.”
+The shift is “be generous strategically.”
+Because you can help others without dimming your flame.
+And when done right - it signals status, authority, and leadership maturity.
+Here are 3 ways to do that:
+𝟭. 𝗦𝗵𝗮𝗿𝗲 𝗶𝗱𝗲𝗮𝘀 𝘄𝗶𝘁𝗵 𝗮 𝘁𝗶𝗺𝗲𝘀𝘁𝗮𝗺𝗽
+Send a short note after key discussions: “As discussed, my recommendation is X. Next step is Y.”
+This creates a clean record without sounding defensive.
+𝟮. 𝗚𝗶𝘃𝗲 𝗰𝗿𝗲𝗱𝗶𝘁 𝘄𝗶𝘁𝗵 𝘆𝗼𝘂𝗿 𝗻𝗮𝗺𝗲 𝗮𝘁𝘁𝗮𝗰𝗵𝗲𝗱
+“A led the execution. I shaped the approach and aligned stakeholders.”
+Credit them and still anchor your contribution.
+𝟯. 𝗣𝗿𝗼𝘁𝗲𝗰𝘁 𝘁𝗵𝗲 𝗶𝗱𝗲𝗮 𝗯𝘆 𝗼𝘄𝗻𝗶𝗻𝗴 𝘁𝗵𝗲 𝗻𝗮𝗿𝗿𝗮𝘁𝗶𝘃𝗲
+In meetings, frame the logic, trade offs, and decision path.
+People can copy an idea. They cannot copy the thinking that produced it.
+The goal is not to hide your contributions, it is to make them undeniable.
+🧩📈 Because generosity without witnesses is a leak. Generosity visible to the right people is leverage.🧩📈 
+Promotions don’t just go to the hardest workers, they go to those who are seen as future leaders.
+That’s exactly what I help professionals achieve with my 21-Day Path to Promotion Workbook, packed with practical, proven strategies to shift perception, amplify leadership presence, and secure the promotion + raise you’ve earned.
+📩 Drop a ‘PATH’ in the comments and I’ll share the link directly.
+(Executive coach, promotion strategy, leadership growth, career advancement, career strategy, visibility at work, senior leadership skills) See less
+
+
 
 ```
