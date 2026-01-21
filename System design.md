@@ -1,4 +1,4 @@
-'''
+```
 If you're building scalable, robust, and maintainable systems - you need more than just code. 
 This blueprint breaks down the essential architectural characteristics every developer, engineer, and architect should understand in 2026.
 At the heart of the blueprint is Agility, which connects every core characteristic - from Scalability and Security to Deployability and Observability.
@@ -15,10 +15,10 @@ At the heart of the blueprint is Agility, which connects every core characterist
 11. Testability and Maintainability sit at the core of development speed and system stability.
 This isn't just a visual - it's your system design cheat sheet. Save it, study it, and start building like an architect.
 #CyberSecurity #lifestyle #canada #life #life #iphone #cybercrime #usa #cyberpunk #Cyber See less
-'''
+```
 
 # Producer sends duplicate events due to retries. how do you ensure exactly-once behavior?
-'''
+```
 1️⃣ Enable Idempotent Producer
 Prevents duplicate writes caused by retries.
 Each message gets a Producer ID (PID) and sequence number.
@@ -65,4 +65,4 @@ Final Summary
 Exactly-once behavior is achieved by combining idempotent producers, Kafka transactions, read_committed consumers, and atomic offset commits. This ensures that retries do not create duplicates, failures do not cause partial processing, and each event is processed exactly once end-to-end.
 Do Follow @codewith_sushant for more tech tips.
 #tech #corporate #interview #question #coder pune See less
-'''
+```
